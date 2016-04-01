@@ -47,22 +47,26 @@ DNS Service Discovery subscription test tool
 * Must match the subscription exactly.
 
 ```
-  register-mdns --instance=server._http._tcp.foo.bar.com --target=foo.bar.com [--port=80]
+  register-mdns --instance=server._http._tcp.foo.bar.com --target=foo.bar.com [--port=1080] [--timeout=2]
 ```
   
 * register a service over mDNS and then look for a subscription notification from the server. Includes PTR, SRV, TXT.
+    This will subscribe, register the service instance, receive the service notification, and unsubscribe from the service.
+    It will wait _timeout_ seconds (default 2) before declaring an error. 
 
 ```
-  llq-poisson [--rate=50] [--interval=2] [--transport=udp|tcp|tls] [--service=_poisson-llq._tcp] --domain=foo.bar.com
+  llq-poisson [--rate=50] [--interval=2] [--transport=udp|tcp|tls] [--service=_poisson-llq._tcp] 
+              [--timeout=4] --domain=foo.bar.com
 ```
 
-* this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate' events per second over the interval in seconds, correlates the responses, then unsubscribes from the service.
+* this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate' events per second over the interval in seconds using a poisson distribution, correlates the responses, then unsubscribes from the service.
 
 ```
-  push-poisson [--rate=50] [--interval=2] [--transport=tcp|tls] [--service=_poisson-push._tcp] --domain=foo.bar.com
+  push-poisson [--rate=50] [--interval=2] [--transport=tcp|tls] [--service=_poisson-push._tcp]
+               [--timeout=4] --domain=foo.bar.com
 ```
 
-* this is an automated test which subscribes to a service (defaults to _poisson-push._tcp), then generates 'rate' events per second over the interval in seconds, correlates the responses, then unsubscribes from the service.
+* this is an automated test which subscribes to a service (defaults to _poisson-push._tcp), then generates 'rate' events per second over the interval in seconds using a poisson distribution, correlates the responses, then unsubscribes from the service.
 
 ## Building from git
 ```
