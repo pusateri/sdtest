@@ -11,7 +11,7 @@ DNS Service Discovery subscription test tool
   llq-discover _http._tcp.foo.bar.com | _http._tcp.bar.com
 ```
 
-* find the DNS server responsible for LLQ subscriptions for the service using type SOA then issue an SRV query for _dns-llq._udp.<zone>.
+* find the DNS server responsible for LLQ subscriptions for the service using type SOA then issue an SRV query for _dns-llq._udp.`<zone>`.
 
 * A domain or subdomain can be specified. If a domain is specified, and multiple subdomains are browseable, multiple DNS queries and responses will be sent and received.
      
@@ -51,6 +51,18 @@ DNS Service Discovery subscription test tool
 ```
   
 * register a service over mDNS and then look for a subscription notification from the server. Includes PTR, SRV, TXT.
+
+```
+  llq-poisson [--rate=50] [--interval=2] [--transport=udp|tcp|tls] [--service=_poisson-llq._tcp] --domain=foo.bar.com
+```
+
+* this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate' events per second over the interval in seconds, correlates the responses, then unsubscribes from the service.
+
+```
+  push-poisson [--rate=50] [--interval=2] [--transport=tcp|tls] [--service=_poisson-push._tcp] --domain=foo.bar.com
+```
+
+* this is an automated test which subscribes to a service (defaults to _poisson-push._tcp), then generates 'rate' events per second over the interval in seconds, correlates the responses, then unsubscribes from the service.
 
 ## Building from git
 ```
