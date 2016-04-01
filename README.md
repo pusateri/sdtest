@@ -47,12 +47,14 @@ DNS Service Discovery subscription test tool
 * Must match the subscription exactly.
 
 ```
-  register-mdns --instance=server._http._tcp.foo.bar.com --target=foo.bar.com [--port=1080] [--timeout=2]
+  llq-single --instance=server._http._tcp.foo.bar.com --target=foo.bar.com [--transport=udp|tcp|tls]
+             [-txt="PATH=/"] [--port=8080] [--timeout=2]
 ```
   
-* register a service over mDNS and then look for a subscription notification from the server. Includes PTR, SRV, TXT.
-    This will subscribe, register the service instance, receive the service notification, and unsubscribe from the service.
-    It will wait _timeout_ seconds (default 2) before declaring an error. 
+* register a service over mDNS and then look for an LLQ subscription notification from the server. Includes PTR, SRV, TXT.
+    This will register the service instance, receive the service notification and compare.
+    It will wait _timeout_ seconds (default 2) before declaring an error if it is not received.
+    It assumes you have already subscribed to the service with the __llq-subscribe__ command.
 
 ```
   llq-poisson [--rate=50] [--interval=2] [--transport=udp|tcp|tls] [--service=_poisson-llq._tcp] 
@@ -60,6 +62,16 @@ DNS Service Discovery subscription test tool
 ```
 
 * this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate' events per second over the interval in seconds using a poisson distribution, correlates the responses, then unsubscribes from the service.
+
+```
+  push-single --instance=server._http._tcp.foo.bar.com --target=foo.bar.com [--transport=tcp|tls]
+              [-txt="PATH=/"] [--port=8080] [--timeout=2]
+```
+  
+* register a service over mDNS and then look for a Push notification from the server. Includes PTR, SRV, TXT.
+    This will register the service instance, receive the service notification and compare.
+    It will wait _timeout_ seconds (default 2) before declaring an error if it is not received.
+    It assumes you have already subscribed to the service with the __push-subscribe__ command.
 
 ```
   push-poisson [--rate=50] [--interval=2] [--transport=tcp|tls] [--service=_poisson-push._tcp]
@@ -74,10 +86,11 @@ autoreconf -i
 ./configure
 make
 ```
-Dependencies
-ldns
 
-On MacOSX, use
+Dependencies: ldns
+
+On MacOSX, use:
+
 ```
 brew install ldns
 autoreconf -i
