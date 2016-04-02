@@ -5,13 +5,13 @@ DNS Service Discovery subscription test tool
 
 * sdsub is a client simulation tool for testing DNS subscriptions. It supports both the older Long Lived Queries (LLQ) and the new replacement DNS Push Notifications.
 
-* sdsub will provide a command line interface (CLI) for interactive use or take commands from an input file. Comands include (IN class is assumed):
+* sdsub will provide a command line interface (CLI) for interactive use or take commands from an input file. DNS Internet Class 'IN' is used in all cases. Optional arguments are in brackets.
 
 ```
-  discover-soa [--protocol=llq|push] [--transport=udp|tcp|tls] _http._tcp.foo.bar.com
+  discover-soa [--protocol=llq|push|update] [--transport=udp|tcp|tls] _http._tcp.foo.bar.com
 ```
 
-* find the DNS server responsible for subscriptions for the service using type SOA then issue an SRV query for _dns-llq._udp.`<zone>` or _dns-push-tls._tcp.<zone>.
+* find the DNS server responsible for subscriptions for the service using type SOA then, if defined, issue an SRV query for _dns-llq.`<proto>`.`<zone>` or _dns-push-tls._tcp.`<zone>`.
 
 * defaults to Push Notifications over TLS for all commands. Push over TCP is allowed for testing only, but should not be deployed in production. Push over UDP is not permitted.
      
@@ -19,7 +19,7 @@ DNS Service Discovery subscription test tool
   subscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--type=PTR] _http._tcp.foo.bar.com
 ```
 
-* transport defaults to UDP, type defaults to PTR. Discovery is performed for each subscription.
+* After subscription confirmation, any matching instances will be displayed. Transport defaults to UDP, type defaults to PTR.   Discovery is performed for each subscription.
 
 ```
   unsubscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--type=PTR] _http._tcp.foo.bar.com
@@ -42,7 +42,7 @@ DNS Service Discovery subscription test tool
               [--timeout=4] --domain=foo.bar.com
 ```
 
-* this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate' events per second over the interval in seconds using a poisson distribution and correlates the responses.
+* this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate' events per second over the interval in seconds using a poisson distribution and correlates the responses. After the timeout, it unsubscribes from the service.
 
 ## Building from git
 ```
