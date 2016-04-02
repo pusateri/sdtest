@@ -28,8 +28,8 @@ DNS Service Discovery subscription test tool
 * must match the subscription exactly.
 
 ```
-  test-single [--protocol=llq|push] [--transport=udp|tcp|tls] --instance=server._http._tcp.foo.bar.com --target=foo.bar.com 
-             [-txt="PATH=/"] [--port=8080] [--timeout=2]
+  test-single [--protocol=llq|push] [--transport=udp|tcp|tls] --instance=server._http._tcp.foo.bar.com
+              [--target=foo.bar.com] [-txt="PATH=/"] [--port=8080] [--timeout=2]
 ```
   
 * register a service over mDNS and then look for an LLQ subscription notification from the server. Includes PTR, SRV, TXT.
@@ -38,8 +38,8 @@ DNS Service Discovery subscription test tool
     It assumes you have already subscribed to the service with the __subscribe__ command.
 
 ```
-  test-poisson [--rate=50] [--interval=2] [--protocol=llq|push] [--transport=udp|tcp|tls] [--service=_poisson-llq._tcp] 
-              [--timeout=4] --domain=foo.bar.com
+  test-poisson [--rate=50] [--interval=2] [--protocol=llq|push] [--transport=udp|tcp|tls]
+               [--service=_poisson-llq._tcp] [--timeout=4] --domain=foo.bar.com
 ```
 
 * this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate' events per second over the interval in seconds using a poisson distribution and correlates the responses. After the timeout, it unsubscribes from the service.
