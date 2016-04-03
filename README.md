@@ -1,11 +1,11 @@
-# sdsub
+# sdtest
 DNS Service Discovery subscription test tool
 
 ## Overview
 
-* sdsub is a client simulation tool for testing DNS subscriptions. It supports both the older Long Lived Queries (LLQ) and the new replacement DNS Push Notifications.
+* sdtest is a client simulation tool for testing DNS subscriptions. It supports both the older Long Lived Queries (LLQ) and the new replacement DNS Push Notifications.
 
-* sdsub will provide a command line interface (CLI) for interactive use or take commands from an input file. DNS Internet Class 'IN' is used in all cases. Optional arguments are in brackets.
+* sdtest will provide a command line interface (CLI) for interactive use or take commands from an input file. DNS Internet Class 'IN' is used in all cases. Optional arguments are in brackets.
 
 ```
   discover-soa [--protocol=llq|push|update] [--transport=udp|tcp|tls] _http._tcp.foo.bar.com
@@ -57,12 +57,10 @@ On MacOSX, use:
 
 ```
 brew install ldns
+brew install openssl
+brew install homebrew/dupes/libedit
+
 autoreconf -i
-./configure --with-pkg-config-path=/usr/local/Cellar/ldns/1.6.17_1/lib/pkgconfig
+./configure --with-pkg-config-path=/usr/local/Cellar/ldns/1.6.17_1/lib/pkgconfig:/usr/local/opt/openssl/lib/pkgconfig
 make
-
-libedit
-    LDFLAGS:  -L/usr/local/opt/libedit/lib
-    CPPFLAGS: -I/usr/local/opt/libedit/include
-
 ```
