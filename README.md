@@ -64,9 +64,7 @@ DNS Service Discovery subscription test tool
   show subscriptions
 ```
 
-* Send query to SOA for record with type. Transport should match subscription. While the subscription channel is
-    intended for asynchronous responses from the server, direct unicast queries are supported and are included
-    for testing.
+* Display current subscription state.
 
 ## Building from git
 ```
