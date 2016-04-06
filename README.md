@@ -24,8 +24,10 @@ DNS Service Discovery subscription test tool
 ```
 
 * After subscription confirmation, any matching instances will be displayed.
-    Transport defaults to UDP for LLQ and TLS for Push. type defaults to PTR.
-    Discovery is performed for each subscription.
+    Transport defaults to UDP for LLQ and TLS for Push. type defaults to PTR. An succesor ordinal subscription id is assigned
+    to each subscription starting with '1'. Discovery is performed for each subscription.
+* When an explicit subscription is issued, the connection will remain open until there is an explicit 'unsubscribe',
+    an explicit 'close', or the test program exits and automatically closes all sockets.
 
 ```
   show subscriptions
@@ -34,12 +36,20 @@ DNS Service Discovery subscription test tool
 * Display current subscription state.
 
 ```
-  unsubscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--force] [--type=PTR] _http._tcp.foo.bar.com
+  unsubscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--force] [--type=PTR] id=n|_http._tcp.foo.bar.com
 ```
 
 * must match the subscription exactly. Unsubscribe commands that do not match a current subscription
     will not be sent by default. Use --force to send them for testing Unsubscribe with no subscription.
-    Use 'show subscriptions' to see  current subscription state.
+    Use 'show subscriptions' to see  current subscription state if specifying by id.
+
+```
+  close id=n
+```
+
+* close the socket of an existing subscription without sending the unsubscribe. With TCP/TLS,
+    the server will get signaled that the client has closed the socket. For LLQ over UDP,
+    no indication will be sent. The id is discovered using 'show subscriptions'.
 
 ```
   query-soa [--transport=udp|tcp|tls] [--subid=n] [--type=PTR] _http._tcp.foo.bar.com
