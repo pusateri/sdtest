@@ -23,14 +23,23 @@ DNS Service Discovery subscription test tool
   subscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--type=PTR] _http._tcp.foo.bar.com
 ```
 
-* After subscription confirmation, any matching instances will be displayed. Transport defaults to UDP,
-    type defaults to PTR. Discovery is performed for each subscription.
+* After subscription confirmation, any matching instances will be displayed.
+    Transport defaults to UDP for LLQ and TLS for Push. type defaults to PTR.
+    Discovery is performed for each subscription.
 
 ```
-  unsubscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--type=PTR] _http._tcp.foo.bar.com
+  show subscriptions
 ```
 
-* must match the subscription exactly.
+* Display current subscription state.
+
+```
+  unsubscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--force] [--type=PTR] _http._tcp.foo.bar.com
+```
+
+* must match the subscription exactly. Unsubscribe commands that do not match a current subscription
+    will not be sent by default. Use --force to send them for testing Unsubscribe with no subscription.
+    Use 'show subscriptions' to see  current subscription state.
 
 ```
   query-soa [--transport=udp|tcp|tls] [--subid=n] [--type=PTR] _http._tcp.foo.bar.com
@@ -59,12 +68,6 @@ DNS Service Discovery subscription test tool
 * this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate'
     events per second over the interval in seconds using a poisson distribution and correlates the responses.
     After the timeout, it unsubscribes from the service.
-
-```
-  show subscriptions
-```
-
-* Display current subscription state.
 
 ## Building from git
 ```
