@@ -28,7 +28,15 @@ DNS Service Discovery subscription test tool
 * must match the subscription exactly.
 
 ```
-  test-single [--protocol=llq|push] [--transport=udp|tcp|tls] --instance=server._http._tcp.foo.bar.com
+  query-soa [--transport=udp|tcp|tls] [--type=PTR] _http._tcp.foo.bar.com
+```
+
+* Send query to SOA for record with type. Transport should match subscription. While the subscription channel is
+    intended for asynchronous responses from the server, direct unicast queries are supported and are included
+    for testing.
+
+```
+  test-single [--protocol=llq|push] [--transport=udp|tcp|tls] instance=server._http._tcp.foo.bar.com
               [--target=foo.bar.com] [-txt="PATH=/"] [--port=8080] [--timeout=2]
 ```
   
@@ -39,7 +47,7 @@ DNS Service Discovery subscription test tool
 
 ```
   test-poisson [--rate=50] [--interval=2] [--protocol=llq|push] [--transport=udp|tcp|tls]
-               [--service=_poisson-llq._tcp] [--timeout=4] --domain=foo.bar.com
+               [--service=_poisson-llq._tcp] [--timeout=4] domain=foo.bar.com
 ```
 
 * this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate' events per second over the interval in seconds using a poisson distribution and correlates the responses. After the timeout, it unsubscribes from the service.
