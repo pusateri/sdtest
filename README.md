@@ -10,7 +10,8 @@ DNS Service Discovery subscription test tool
     file. DNS Internet Class 'IN' is used in all cases. Optional arguments are in brackets.
 
 ```
-  discover-soa [--protocol=llq|push|update] [--transport=udp|tcp|tls] _http._tcp.foo.bar.com
+  discover-soa [--verbose] [--protocol=llq|push|update] [--transport=udp|tcp|tls]
+               _http._tcp.foo.bar.com
 ```
 
 * find the DNS server responsible for subscriptions for the service using type SOA then, if defined,
@@ -20,7 +21,8 @@ DNS Service Discovery subscription test tool
     but should not be deployed in production. Push over UDP is not permitted.
      
 ```
-  subscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--type=PTR] _http._tcp.foo.bar.com
+  subscribe [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls] [--type=PTR]
+            _http._tcp.foo.bar.com
 ```
 
 * After subscription confirmation, any matching instances will be displayed.
@@ -37,8 +39,8 @@ DNS Service Discovery subscription test tool
 * Display current subscription state.
 
 ```
-  unsubscribe [--protocol=llq|push] [--transport=udp|tcp|tls] [--force] [--type=PTR]
-              id=n|_http._tcp.foo.bar.com
+  unsubscribe [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls] [--force]
+              [--type=PTR] id=n | _http._tcp.foo.bar.com
 ```
 
 * must match the subscription exactly. Unsubscribe commands that do not match a current subscription
@@ -54,7 +56,7 @@ DNS Service Discovery subscription test tool
     no indication will be sent. The id is discovered using 'show subscriptions'.
 
 ```
-  query-soa [--transport=udp|tcp|tls] [--subid=n] [--type=PTR] _http._tcp.foo.bar.com
+  query-soa [--verbose] [--transport=udp|tcp|tls] [--id=n] [--type=PTR] _http._tcp.foo.bar.com
 ```
 
 * Send query to SOA for record with type. Transport defaults to match subscription. While the subscription channel is
@@ -63,8 +65,9 @@ DNS Service Discovery subscription test tool
     'show subscriptions'. Without the subscription ID, the first subscription will be the default.
 
 ```
-  test-single [--protocol=llq|push] [--transport=udp|tcp|tls] instance=server._http._tcp.foo.bar.com
+  test-single [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls]
               [--target=foo.bar.com] [-txt="PATH=/"] [--port=8080] [--timeout=2]
+              instance=server._http._tcp.foo.bar.com
 ```
   
 * register a service over mDNS and then look for an LLQ subscription notification from the server. Includes PTR, SRV, TXT.
@@ -73,7 +76,7 @@ DNS Service Discovery subscription test tool
     It assumes you have already subscribed to the service with the __subscribe__ command.
 
 ```
-  test-poisson [--rate=50] [--interval=2] [--protocol=llq|push] [--transport=udp|tcp|tls]
+  test-poisson [--verbose] [--rate=50] [--interval=2] [--protocol=llq|push] [--transport=udp|tcp|tls]
                [--service=_poisson-llq._tcp] [--timeout=4] domain=foo.bar.com
 ```
 
@@ -88,16 +91,17 @@ autoreconf -i
 make
 ```
 
-Dependencies: ldns
+Dependencies: getdns, libedit, openssl
 
 On MacOSX, use:
 
 ```
-brew install ldns
-brew install openssl
+brew install getdns (use github version for getdns_ext_event.pc)
+brew install openssl check
+brew install libevent (currently requires 2.1 which isn't in brew)
 brew install homebrew/dupes/libedit
 
 autoreconf -i
-./configure --with-pkg-config-path=/usr/local/Cellar/ldns/1.6.17_1/lib/pkgconfig:/usr/local/opt/openssl/lib/pkgconfig
+./configure --with-pkg-config-path=/usr/local/opt/openssl/lib/pkgconfig:/usr/local/opt/libedit/lib/pkgconfig
 make
 ```
