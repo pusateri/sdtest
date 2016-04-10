@@ -65,9 +65,9 @@ DNS Service Discovery subscription test tool
     'show subscriptions'. Without the subscription ID, the first subscription will be the default.
 
 ```
-  test-single [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls]
-              [--target=foo.bar.com] [-txt="PATH=/"] [--port=8080] [--timeout=2]
-              instance=server._http._tcp.foo.bar.com
+  test-register-receive-single [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls]
+                               [--target=foo.bar.com] [-txt="PATH=/"] [--port=8080] [--timeout=2]
+                               instance=server._http._tcp.foo.bar.com
 ```
   
 * register a service over mDNS and then look for an LLQ subscription notification from the server. Includes PTR, SRV, TXT.
@@ -76,8 +76,9 @@ DNS Service Discovery subscription test tool
     It assumes you have already subscribed to the service with the __subscribe__ command.
 
 ```
-  test-poisson [--verbose] [--rate=50] [--interval=2] [--protocol=llq|push] [--transport=udp|tcp|tls]
-               [--service=_poisson-llq._tcp] [--timeout=4] domain=foo.bar.com
+  test-register-receive-poisson [--verbose] [--rate=50] [--interval=2] [--protocol=llq|push]
+                                [--transport=udp|tcp|tls] [--service=_poisson-llq._tcp]
+                                [--timeout=4] domain=foo.bar.com
 ```
 
 * this is an automated test which subscribes to a service (defaults to _poisson-llq._tcp), then generates 'rate'
@@ -85,19 +86,19 @@ DNS Service Discovery subscription test tool
     After the timeout, it unsubscribes from the service.
 
 ## Building from git
+
+Dependencies: getdns, libedit, libevent, openssl
+
 ```
 autoreconf -i
 ./configure
 make
 ```
 
-Dependencies: getdns, libedit, openssl
-
 On MacOSX, use:
 
 ```
-brew install getdns (use github version for getdns_ext_event.pc)
-brew install openssl check
+brew install getdns openssl check
 brew install libevent (currently requires 2.1 which isn't in brew)
 brew install homebrew/dupes/libedit
 
