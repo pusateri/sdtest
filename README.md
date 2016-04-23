@@ -87,8 +87,9 @@ DNS Service Discovery subscription test tool
 
 ## Building from git
 
-Dependencies: getdns, libedit, libevent, openssl
+Dependencies: getdns (libcheck, openssl), libedit, libevent (openssl)
 
+To build in general, use:
 ```
 autoreconf -i
 ./configure
@@ -98,11 +99,38 @@ make
 On MacOSX, use:
 
 ```
-brew install getdns openssl check
-brew install libevent (currently requires 2.1 which isn't in brew)
+brew install openssl check libevent
 brew install homebrew/dupes/libedit
+
+(must build getdns by hand to get getdns_ext_event.pc)
+git clone https://github.com/getdnsapi/getdns.git
+glibtoolize -ci
+autoreconf -fi
+./configure --with-libevent=/usr/local/opt/libevent --without-libidn --enable-stub-only --with-ssl=/usr/local/opt/openssl
+vim src/config.h (enable EVENT macros)
+make install
 
 autoreconf -i
 ./configure --with-pkg-config-path=/usr/local/opt/openssl/lib/pkgconfig:/usr/local/opt/libedit/lib/pkgconfig
 make
+```
+
+On FreeBSD,
+
+```
+pkg install libcheck libedit openssl
+echo WITH_OPENSSL_PORT=yes >> /etc/make.config
+cd /usr/ports/devel/libevent2; make install
+(must build getdns by hand to get getdns_ext_event.pc)
+git clone https://github.com/getdnsapi/getdns.git
+libtoolize -ci
+autoreconf -fi
+./configure --prefix=/usr/local --enable-stub-only --without-libidn --with-libevent=/usr/local
+vim src/config.h (enable EVENT macros)
+make install
+
+autoreconf -i
+./configure --prefix=/usr/local
+make
+
 ```
