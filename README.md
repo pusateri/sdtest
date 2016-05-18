@@ -21,8 +21,8 @@ DNS Service Discovery subscription test tool
     but should not be deployed in production. Push over UDP is not permitted.
      
 ```
-  subscribe [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls] [--type=PTR]
-            _http._tcp.foo.bar.com
+  subscribe [--verbose] [--protocol=llq|push] [--target=<IPv4 or IPv6 address>]
+            [--transport=udp|tcp|tls] [--type=PTR] _http._tcp.foo.bar.com
 ```
 
 * After subscription confirmation, any matching instances will be displayed.
@@ -39,8 +39,8 @@ DNS Service Discovery subscription test tool
 * Display current subscription state.
 
 ```
-  unsubscribe [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls] [--force]
-              [--type=PTR] id=n | _http._tcp.foo.bar.com
+  unsubscribe [--verbose] [--protocol=llq|push] [--target=<IPv4 or IPv6 address>]
+              [--transport=udp|tcp|tls] [--force] [--type=PTR] id=n | _http._tcp.foo.bar.com
 ```
 
 * must match the subscription exactly. Unsubscribe commands that do not match a current subscription
@@ -56,7 +56,8 @@ DNS Service Discovery subscription test tool
     no indication will be sent. The id is discovered using 'show subscriptions'.
 
 ```
-  query-soa [--verbose] [--transport=udp|tcp|tls] [--id=n] [--type=PTR] _http._tcp.foo.bar.com
+  query-soa [--verbose] [--target=<IPv4 or IPv6 address>] [--transport=udp|tcp|tls]
+            [--id=n] [--type=PTR] _http._tcp.foo.bar.com
 ```
 
 * Send query to SOA for record with type. Transport defaults to match subscription. While the subscription channel is
@@ -110,6 +111,7 @@ autoreconf -fi
 vim src/config.h (enable EVENT macros)
 make install
 
+(now back to building sdtest)
 autoreconf -i
 ./configure --with-pkg-config-path=/usr/local/opt/openssl/lib/pkgconfig:/usr/local/opt/libedit/lib/pkgconfig
 make
@@ -125,10 +127,11 @@ cd /usr/ports/devel/libevent2; make install
 git clone https://github.com/getdnsapi/getdns.git
 libtoolize -ci
 autoreconf -fi
-./configure --prefix=/usr/local --enable-stub-only --without-libidn --with-libevent=/usr/local
+./configure --prefix=/usr/local --enable-stub-only --without-libidn --with-libevent
 vim src/config.h (enable EVENT macros)
 make install
 
+(now back to building sdtest)
 autoreconf -i
 ./configure --prefix=/usr/local
 make
