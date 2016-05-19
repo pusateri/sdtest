@@ -31,6 +31,7 @@ DNS Service Discovery subscription test tool
 * Discovery is performed for each subscription.
 * When an explicit subscription is issued, the connection will remain open until there is an explicit 'unsubscribe',
     an explicit 'close', or the test program exits and automatically closes all sockets.
+* By default, an SOA discovery followed by SRV discovery will locate the target to send the subscription to. The --target option can be used to bypass the discovery process.
 
 ```
   show subscriptions
@@ -46,6 +47,7 @@ DNS Service Discovery subscription test tool
 * must match the subscription exactly. Unsubscribe commands that do not match a current subscription
     will not be sent by default. Use --force to send them for testing Unsubscribe with no subscription.
     Use 'show subscriptions' to see  current subscription state if specifying by id.
+* By default, the unsubscribe will be sent to the same address as the subscribe. This can be bypassed with the --target option.
 
 ```
   close id=n
@@ -64,6 +66,7 @@ DNS Service Discovery subscription test tool
     intended for asynchronous responses from the server, direct unicast queries are supported and are included
     for testing. Subscription IDs are sequential numbers based on order of subscription and can be found with
     'show subscriptions'. Without the subscription ID, the first subscription will be the default.
+* By default, the query will be sent the same address as the subscribe. This can be bypassed with the --target option.
 
 ```
   test-register-receive-single [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls]
@@ -103,15 +106,6 @@ On MacOSX, use:
 brew install openssl check libevent
 brew install homebrew/dupes/libedit
 
-(must build getdns by hand to get getdns_ext_event.pc)
-git clone https://github.com/getdnsapi/getdns.git
-glibtoolize -ci
-autoreconf -fi
-./configure --with-libevent=/usr/local/opt/libevent --without-libidn --enable-stub-only --with-ssl=/usr/local/opt/openssl
-vim src/config.h (enable EVENT macros)
-make install
-
-(now back to building sdtest)
 autoreconf -i
 ./configure --with-pkg-config-path=/usr/local/opt/openssl/lib/pkgconfig:/usr/local/opt/libedit/lib/pkgconfig
 make
@@ -123,15 +117,7 @@ On FreeBSD,
 pkg install libcheck libedit openssl
 echo WITH_OPENSSL_PORT=yes >> /etc/make.config
 cd /usr/ports/devel/libevent2; make install
-(must build getdns by hand to get getdns_ext_event.pc)
-git clone https://github.com/getdnsapi/getdns.git
-libtoolize -ci
-autoreconf -fi
-./configure --prefix=/usr/local --enable-stub-only --without-libidn --with-libevent
-vim src/config.h (enable EVENT macros)
-make install
 
-(now back to building sdtest)
 autoreconf -i
 ./configure --prefix=/usr/local
 make
