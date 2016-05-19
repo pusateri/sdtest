@@ -1,5 +1,6 @@
 # sdtest
-DNS Service Discovery subscription test tool
+DNS Service Discovery subscription test tool. This includes both the new subscription protocol (DNS Push Notifications)
+and the previous subscription protocol (Long-lived Queries).
 
 ## Overview
 
@@ -91,7 +92,7 @@ DNS Service Discovery subscription test tool
 
 ## Building from git
 
-Dependencies: getdns (libcheck, openssl), libedit, libevent (openssl)
+Dependencies: libedit, libevent, openssl
 
 To build in general, use:
 ```
@@ -103,7 +104,7 @@ make
 On MacOSX, use:
 
 ```
-brew install openssl check libevent
+brew install openssl libevent
 brew install homebrew/dupes/libedit
 
 autoreconf -i
@@ -114,9 +115,9 @@ make
 On FreeBSD,
 
 ```
-pkg install libcheck libedit openssl
+pkg install libedit openssl
 echo WITH_OPENSSL_PORT=yes >> /etc/make.config
-cd /usr/ports/devel/libevent2; make install
+cd /usr/ports/devel/libevent2; make install     # build libevent2 with openssl port, not system version of openssl
 
 autoreconf -i
 ./configure --prefix=/usr/local
