@@ -1,6 +1,5 @@
 # sdtest
-DNS Service Discovery subscription test tool. This includes both the new subscription protocol (DNS Push Notifications)
-and the previous subscription protocol (Long-lived Queries).
+DNS Service Discovery subscription test tool.
 
 ## Overview
 
@@ -11,16 +10,37 @@ and the previous subscription protocol (Long-lived Queries).
     file. DNS Internet Class 'IN' is used in all cases. Optional arguments are in brackets.
 
 ```
-  discover-soa [--verbose] [--protocol=llq|push|update] [--transport=udp|tcp|tls]
-               _http._tcp.foo.bar.com
+  discover-soa [--verbose] [--force_ipv4|--force_ipv6] [--nameserver=<IPv4 or IPv6 address>] 
+               [--protocol=llq|push|update] [--transport=udp|tcp|tls] _http._tcp.foo.bar.com
 ```
 
 * find the DNS server responsible for subscriptions for the service using type SOA then, if defined,
     issue an SRV query for _dns-llq.`<proto>`.`<zone>` or _dns-push-tls._tcp.`<zone>`.
-
+* default resolver will be used unless a nameserver is specified.
+* default ports used: UDP 53, TCP 53, TLS 853
+* can force IPv4 or IPv6. Otherwise, first IPv4 address is used
 * defaults to Push Notifications over TLS for all commands. Push over TCP is allowed for testing only,
     but should not be deployed in production. Push over UDP is not permitted.
-     
+
+```
+  test-session-signal [--verbose] [--nameserver=<IPv4 or IPv6 address>]
+                      [--transport=tcp|tls] [--keepalive-interval=n]
+                      [--idle-timeout=n]
+```
+
+ * Send a Session Signaling Keepalive request and get back the servers adjusted keepalive
+     interval and idle timeout value.
+ * If the nameserver doesn' support the session signaling opcode, NOTIMP will be returned.
+ * Other errors could be returned for other reasons. Consult the spec.
+ 
+```
+  test-session-signal-errors [--verbose] [--nameserver=<IPv4 or IPv6 address>]
+                             [--transport=tcp|tls] [--keepalive-interval=n]
+                             [--idle-timeout=n]
+```
+
+ * Test a server for different Session Signaling error conditions.
+ 
 ```
   subscribe [--verbose] [--protocol=llq|push] [--target=<IPv4 or IPv6 address>]
             [--transport=udp|tcp|tls] [--type=PTR] _http._tcp.foo.bar.com
@@ -33,6 +53,12 @@ and the previous subscription protocol (Long-lived Queries).
 * When an explicit subscription is issued, the connection will remain open until there is an explicit 'unsubscribe',
     an explicit 'close', or the test program exits and automatically closes all sockets.
 * By default, an SOA discovery followed by SRV discovery will locate the target to send the subscription to. The --target option can be used to bypass the discovery process.
+
+```
+  show nameservers
+```
+
+* Display current nameserver state.
 
 ```
   show subscriptions
@@ -71,7 +97,7 @@ and the previous subscription protocol (Long-lived Queries).
 
 ```
   test-register-receive-single [--verbose] [--protocol=llq|push] [--transport=udp|tcp|tls]
-                               [--target=foo.bar.com] [-txt="PATH=/"] [--port=8080] [--timeout=2]
+                               [--target=foo.bar.com] [--txt="PATH=/"] [--port=8080] [--timeout=2]
                                instance=server._http._tcp.foo.bar.com
 ```
   
@@ -124,3 +150,10 @@ autoreconf -i
 make
 
 ```
+
+On Ubuntu 16.04 LTS,
+
+```
+sudo apt-get install libedit-dev
+```
+
