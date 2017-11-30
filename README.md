@@ -23,23 +23,23 @@ DNS Service Discovery subscription test tool.
     but should not be deployed in production. Push over UDP is not permitted.
 
 ```
-  test-session-signal [--verbose] [--nameserver=<IPv4 or IPv6 address>]
-                      [--transport=tcp|tls] [--keepalive-interval=n]
-                      [--idle-timeout=n]
+  test-dso-keepalive [--verbose] [--nameserver=<IPv4 or IPv6 address>]
+                     [--transport=tcp|tls] [--keepalive-interval=n]
+                     [--idle-timeout=n] [--pad]
 ```
 
- * Send a Session Signaling Keepalive request and get back the servers adjusted keepalive
-     interval and idle timeout value.
- * If the nameserver doesn' support the session signaling opcode, NOTIMP will be returned.
+ * Send a Stateful Operation Keepalive request and get back the servers       
+     adjusted keepalive interval and idle timeout value.
+ * If the nameserver doesn' support the stateful operations opcode, NOTIMP will be returned.
  * Other errors could be returned for other reasons. Consult the spec.
  
 ```
-  test-session-signal-errors [--verbose] [--nameserver=<IPv4 or IPv6 address>]
-                             [--transport=tcp|tls] [--keepalive-interval=n]
-                             [--idle-timeout=n]
+  test-dso-errors [--verbose] [--nameserver=<IPv4 or IPv6 address>]
+                  [--transport=tcp|tls] [--keepalive-interval=n]
+                  [--idle-timeout=n]
 ```
 
- * Test a server for different Session Signaling error conditions.
+ * Test a server for different Stateful Operations error conditions.
  
 ```
   subscribe [--verbose] [--protocol=llq|push] [--target=<IPv4 or IPv6 address>]
@@ -130,8 +130,10 @@ make
 On MacOSX, use:
 
 ```
-brew install openssl libevent
-brew install homebrew/dupes/libedit
+brew install pkgconfig autoconf automake
+brew tap pusateri/homebrew-libevhtp
+brew install libevhtp
+brew install openssl libevent libedit
 
 autoreconf -i
 ./configure --with-pkg-config-path=/usr/local/opt/openssl/lib/pkgconfig:/usr/local/opt/libedit/lib/pkgconfig
